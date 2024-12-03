@@ -156,24 +156,24 @@ async def getpvt(update: Update, context: CallbackContext) -> None:
         random_links = random.sample(group_links_list, 10)
         keyboard = [
             [
-                InlineKeyboardButton(f"Group 1", url=random_links[0]['link']),
-                InlineKeyboardButton(f"Group 2", url=random_links[1]['link']),
-                InlineKeyboardButton(f"Group 3", url=random_links[2]['link']),
-                InlineKeyboardButton(f"Group 4", url=random_links[3]['link']),
-                InlineKeyboardButton(f"Group 5", url=random_links[4]['link'])
+                InlineKeyboardButton(f"Gᴄ𝟷", url=random_links[0]['link']),
+                InlineKeyboardButton(f"Gᴄ𝟸", url=random_links[1]['link']),
+                InlineKeyboardButton(f"Gᴄ𝟹", url=random_links[2]['link']),
+                InlineKeyboardButton(f"Gᴄ𝟺", url=random_links[3]['link']),
+                InlineKeyboardButton(f"Gᴄ𝟻", url=random_links[4]['link'])
             ],
             [
-                InlineKeyboardButton(f"Group 6", url=random_links[5]['link']),
-                InlineKeyboardButton(f"Group 7", url=random_links[6]['link']),
-                InlineKeyboardButton(f"Group 8", url=random_links[7]['link']),
-                InlineKeyboardButton(f"Group 9", url=random_links[8]['link']),
-                InlineKeyboardButton(f"Group 10", url=random_links[9]['link'])
+                InlineKeyboardButton(f"Gᴄ𝟼", url=random_links[5]['link']),
+                InlineKeyboardButton(f"Gᴄ𝟽", url=random_links[6]['link']),
+                InlineKeyboardButton(f"Gᴄ𝟾", url=random_links[7]['link']),
+                InlineKeyboardButton(f"Gᴄ𝟿", url=random_links[8]['link']),
+                InlineKeyboardButton(f"Gᴇᴛ", url=random_links[9]['link'])
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await update.message.reply_text("Here are 10 random private group links:", reply_markup=reply_markup)
+        await update.message.reply_text("Tʜɪs ɪs Tʜᴇ 𝟷𝟶 ʀᴀɴᴅᴏᴍ  ɢʀᴏᴜᴘ ʟɪɴᴋs\n\nNᴏᴛᴇ ᴀғᴛᴇʀ 𝟷𝟶 sᴇᴄ ᴛʜᴇɴ ᴜsᴇʀ /getpvt ᴄᴏᴍᴍᴀɴᴅ\n\nBᴇᴄᴀᴜsᴇ ᴏғ Tᴇᴀᴍ Sᴀɴᴋɪ ᴘᴏʟɪᴄʏ", reply_markup=reply_markup)
     else:
-        await update.message.reply_text("No private group links available yet. Please try again later.")
+        await update.message.reply_text("Nᴏ ᴘʀɪᴠᴀᴛᴇ ɢʀᴏᴜᴘ ʟɪɴᴋs ᴀᴠᴀɪʟᴀʙʟᴇ ʏᴇᴛ. Pʟᴇᴀsᴇ ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ")
 
 async def broadcast(update: Update, context: CallbackContext) -> None:
     """Owner-only command to send a broadcast message to all users."""

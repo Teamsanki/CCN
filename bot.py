@@ -12,7 +12,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 # Replace this with your bot's token from BotFather
-TELEGRAM_TOKEN = "7955924885:AAE-dBnJeTYKu0vFSmF7AAYS0IZOlHeQNsg"
+TELEGRAM_TOKEN = "7902514308:AAGRWf0i1sN0hxgvVh75AlHNvcVpJ4j07HY"
 
 # MongoDB URL
 MONGO_URL = "mongodb+srv://Teamsanki:Teamsanki@cluster0.jxme6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -170,8 +170,29 @@ def is_valid_url(url):
     parsed = urlparse(url)
     return bool(parsed.netloc) and bool(parsed.scheme)
 
+# Dictionary to store the last execution time for users
+user_last_getpvt_time = {}
+
 async def getpvt(update: Update, context: CallbackContext) -> None:
-    """Fetches random private group links."""
+    """Fetches random private group links with a 5-second delay for repeated use."""
+    user_id = update.message.from_user.id
+    current_time = datetime.now()
+
+    # Check if the user has used the command before
+    if user_id in user_last_getpvt_time:
+        last_used_time = user_last_getpvt_time[user_id]
+        time_diff = (current_time - last_used_time).total_seconds()
+
+        # If the command is used within 5 seconds, send a delay message
+        if time_diff < 5:
+            await update.message.reply_text(
+                f"⚠️ Please wait {5 - int(time_diff)} seconds before using this command again."
+            )
+            return
+
+    # Update the last used time for the user
+    user_last_getpvt_time[user_id] = current_time
+
     # Fetch all group links from the database
     group_links = private_groups_collection.find()
     group_links_list = list(group_links)
@@ -196,10 +217,14 @@ async def getpvt(update: Update, context: CallbackContext) -> None:
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         await update.message.reply_text(
-            "Tʜɪs ɪs Tʜᴇ 𝟷𝟶 ʀᴀɴᴅᴏᴍ  ɢʀᴏᴜᴘ ʟɪɴᴋs\n\n"
+            "Tʜɪs ɪs Tʜᴇ 𝟷𝟶 ʀᴀɴᴅᴏᴍ ɢʀᴏᴜᴘ ʟɪɴᴋs\n\n"
             "Nᴏᴛᴇ ᴀғᴛᴇʀ 𝟷𝟶 sᴇᴄ ᴛʜᴇɴ ᴜsᴇ /getpvt ᴄᴏᴍᴍᴀɴᴅ\n\n"
             "Bᴇᴄᴀᴜsᴇ ᴏғ Tᴇᴀᴍ Sᴀɴᴋɪ ᴘᴏʟɪᴄʏ",
             reply_markup=reply_markup
+        )
+    else:
+        await update.message.reply_text(
+            "Nᴏ ᴘʀɪᴠᴀᴛᴇ ɢʀᴏᴜᴘ ʟɪɴᴋs ᴀᴠᴀɪʟᴀʙʟᴇ ʏᴇᴛ. Pʟᴇᴀsᴇ ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ"
         )
     else:
         await update.message.reply_text(

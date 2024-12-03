@@ -153,7 +153,7 @@ async def getpvt(update: Update, context: CallbackContext) -> None:
     group_links_list = list(group_links)
 
     if len(group_links_list) > 0:
-        random_links = random.sample(group_links_list, 6)
+        random_links = random.sample(group_links_list, 10)
         keyboard = [
             [
                 InlineKeyboardButton(f"Group 1", url=random_links[0]['link']),

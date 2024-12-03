@@ -4,6 +4,7 @@ from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQ
 from pymongo import MongoClient
 from datetime import datetime
 import random
+import os
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -186,36 +187,26 @@ async def verify_admin_password(update: Update, context: CallbackContext) -> Non
             "/addgc - Add private group link\n"
             "/getpvt - Get private group links\n"
             "/stats - View bot stats\n"
-            "/broadcast - Broadcast a message to all users\n"
+            "/broadcast - Send a broadcast message to all users\n"
             "/help - Show this help message"
         )
         await update.message.reply_text(admin_commands_text)
     else:
+        # Incorrect password
         await update.message.reply_text("Incorrect password. Please start the bot again.")
 
-async def broadcast(update: Update, context: CallbackContext) -> None:
-    """Send a broadcast message to all users."""
-    if update.message.from_user.id != int(OWNER_TELEGRAM_ID):
-        await update.message.reply_text("This command is restricted to the owner only.")
-        return
-
-    if not context.args:
-        await update.message.reply_text("Please provide the message to broadcast. Usage: /broadcast <message>")
-        return
-
-    broadcast_message = " ".join(context.args)
-
-    # Get all users and send them the broadcast message
-    users = users_collection.find()
-    for user in users:
-        try:
-            await context.bot.send_message(user["user_id"], broadcast_message)
-        except Exception as e:
-            logger.error(f"Error sending broadcast to {user['user_id']}: {e}")
+async def stats(update: Update, context: CallbackContext) -> None:
+    """Show bot statistics."""
+    total_users = users_collection.count_documents({})
+    uptime = get_uptime()
     
-    await update.message.reply_text("Broadcast message sent to all users.")
+    stats_text = (
+        f"Total Users: {total_users}\n"
+        f"Bot Uptime: {uptime}"
+    )
+    await update.message.reply_text(stats_text)
 
-def main():
+def main() -> None:
     """Start the bot."""
     application = Application.builder().token(TELEGRAM_TOKEN).build()
 

@@ -51,45 +51,44 @@ async def start(update: Update, context: CallbackContext) -> None:
 
     # Attractive welcome message with a photo
     welcome_text = (
-        "*🎉 Wᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ 𝐒𝐀𝐍𝐊𝐈 𝐆𝐂 𝐋𝐈𝐍𝐊 Bᴏᴛ! 🎉*\ɴ\ɴ"
-        "Hᴇʟʟᴏ, *{user_name}* 👋\ɴ\ɴ"
-        "Tʜᴀɴᴋ ʏᴏᴜ ғᴏʀ ᴄʜᴏᴏsɪɴɢ ᴏᴜʀ ʙᴏᴛ! Hᴇʀᴇ’s ʜᴏᴡ ɪᴛ ᴄᴀɴ ʜᴇʟᴘ ʏᴏᴜ:\ɴ\ɴ"
-        "🔹 Gᴇᴛ Rᴀɴᴅᴏᴍ Lɪɴᴋs: Yᴏᴜ ᴄᴀɴ ɢᴇᴛ ʀᴀɴᴅᴏᴍ ᴘʀɪᴠᴀᴛᴇ ɢʀᴏᴜᴘ ʟɪɴᴋs ᴀɴʏᴛɪᴍᴇ! Jᴜsᴛ ᴛʏᴘᴇ /ɢᴇᴛᴘᴠᴛ ᴛᴏ ʀᴇᴄᴇɪᴠᴇ ᴛʜᴇᴍ.\ɴ\ɴ"
-        "🔹 Wᴀɴᴛ ᴛᴏ Pʀᴏᴍᴏᴛᴇ Yᴏᴜʀ Gʀᴏᴜᴘ?: Iғ ʏᴏᴜ’ᴅ ʟɪᴋᴇ ᴛᴏ ᴘʀᴏᴍᴏᴛᴇ ʏᴏᴜʀ ɢʀᴏᴜᴘ, sɪᴍᴘʟʏ sᴇɴᴅ ᴀ ʀᴇǫᴜᴇsᴛ ᴡɪᴛʜ ᴛʜᴇ ᴍᴇssᴀɢᴇ ᴀɴᴅ ʟɪɴᴋ ᴜsɪɴɢ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅ:\ɴ"
-        "/req <ʏᴏᴜʀ_ᴍᴇssᴀɢᴇ> <ʏᴏᴜʀ_ɢʀᴏᴜᴘ_ʟɪɴᴋ>\ɴ\ɴ"
-        "Oɴᴄᴇ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ʀᴇᴄᴇɪᴠᴇᴅ, ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴡɪʟʟ ʀᴇᴠɪᴇᴡ ɪᴛ ᴀɴᴅ ɢᴇᴛ ʙᴀᴄᴋ ᴛᴏ ʏᴏᴜ! Fᴏʀ ᴍᴏʀᴇ ᴅᴇᴛᴀɪʟs, ғᴇᴇʟ ғʀᴇᴇ ᴛᴏ DM @TSGCODER 📩\ɴ\ɴ"
-        "🔹 Nᴇᴇᴅ Hᴇʟᴘ?: Tʏᴘᴇ /help ᴛᴏ ᴠɪᴇᴡ ᴀʟʟ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅs ʏᴏᴜ ᴄᴀɴ ᴜsᴇ ᴡɪᴛʜ ᴛʜɪs ʙᴏᴛ.\ɴ\ɴ"
+        "*🎉 Wᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ 𝐒𝐀𝐍𝐊𝐈 𝐆𝐂 𝐋𝐈𝐍𝐊 Bᴏᴛ! 🎉*\n\n"
+        "Hᴇʟʟᴏ, *{user_name}* 👋\n\n"
+        "Tʜᴀɴᴋ ʏᴏᴜ ғᴏʀ ᴄʜᴏᴏsɪɴɢ ᴏᴜʀ ʙᴏᴛ! Hᴇʀᴇ’s ʜᴏᴡ ɪᴛ ᴄᴀɴ ʜᴇʟᴘ ʏᴏᴜ:\n\n"
+        "🔹 Gᴇᴛ Rᴀɴᴅᴏᴍ Lɪɴᴋs: Yᴏᴜ ᴄᴀɴ ɢᴇᴛ ʀᴀɴᴅᴏᴍ ᴘʀɪᴠᴀᴛᴇ ɢʀᴏᴜᴘ ʟɪɴᴋs ᴀɴʏᴛɪᴍᴇ! Jᴜsᴛ ᴛʏᴘᴇ /ɢᴇᴛᴘᴠᴛ ᴛᴏ ʀᴇᴄᴇɪᴠᴇ ᴛʜᴇᴍ.\n\n"
+        "🔹 Wᴀɴᴛ ᴛᴏ Pʀᴏᴍᴏᴛᴇ Yᴏᴜʀ Gʀᴏᴜᴘ?: Iғ ʏᴏᴜ’ᴅ ʟɪᴋᴇ ᴛᴏ ᴘʀᴏᴍᴏᴛᴇ ʏᴏᴜʀ ɢʀᴏᴜᴘ, sɪᴍᴘʟʏ sᴇɴᴅ ᴀ ʀᴇǫᴜᴇsᴛ ᴡɪᴛʜ ᴛʜᴇ ᴍᴇssᴀɢᴇ ᴀɴᴅ ʟɪɴᴋ ᴜsɪɴɢ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅ:\n"
+        "/req <ʏᴏᴜʀ_ᴍᴇssᴀɢᴇ> <ʏᴏᴜʀ_ɢʀᴏᴜᴘ_ʟɪɴᴋ>\n\n"
+        "Oɴᴄᴇ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ʀᴇᴄᴇɪᴠᴇᴅ, ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴡɪʟʟ ʀᴇᴠɪᴇᴡ ɪᴛ ᴀɴᴅ ɢᴇᴛ ʙᴀᴄᴋ ᴛᴏ ʏᴏᴜ! Fᴏʀ ᴍᴏʀᴇ ᴅᴇᴛᴀɪʟs, ғᴇᴇʟ ғʀᴇᴇ ᴛᴏ DM @TSGCODER 📩\n\n"
+        "🔹 Nᴇᴇᴅ Hᴇʟᴘ?: Tʏᴘᴇ /help ᴛᴏ ᴠɪᴇᴡ ᴀʟʟ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅs ʏᴏᴜ ᴄᴀɴ ᴜsᴇ ᴡɪᴛʜ ᴛʜɪs ʙᴏᴛ.\n\n"
         "Tʜɪs ʙᴏᴛ ʜᴀs ʙᴇᴇɴ ᴄʀᴇᴀᴛᴇᴅ ᴡɪᴛʜ ❤️ ʙʏ Tᴇᴀᴍ Sᴀɴᴋɪ. Wᴇ ʜᴏᴘᴇ ʏᴏᴜ ᴇɴJᴏʏ ʏᴏᴜʀ ᴇxᴘᴇʀɪᴇɴᴄᴇ! 🚀 Fᴇᴇʟ ғʀᴇᴇ ᴛᴏ ʀᴇᴀᴄʜ ᴏᴜᴛ ɪғ ʏᴏᴜ ɴᴇᴇᴅ ᴀɴʏ ᴀssɪsᴛᴀɴᴄᴇ. 😇"
     ).format(user_name=update.message.from_user.first_name)
 
-    # Send welcome message with photo and Markdown formatting
+    # Send welcome message with a single photo
     photo_url = "https://graph.org/file/6c0db28a848ed4dacae56-93b1bc1873b2494eb2.jpg"  # Replace with actual photo URL
-    media = InputMediaPhoto(media=photo_url, caption=welcome_text, parse_mode='Markdown')
-    await update.message.reply_media_group([media])
+    await update.message.reply_photo(photo=photo_url, caption=welcome_text, parse_mode='Markdown')
 
-    # Create an inline keyboard with a link to the owner's support channel and owner's Telegram ID
+    # Create an inline keyboard with links to support and the owner
     keyboard = [
         [InlineKeyboardButton("Sᴜᴘᴘᴏʀᴛ", url=OWNER_SUPPORT_CHANNEL)],
         [InlineKeyboardButton("Oᴡɴᴇʀ", url=f"tg://user?id={OWNER_TELEGRAM_ID}")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    # Send the message with the inline keyboard
+    # Send the inline keyboard message
     await update.message.reply_text('Tap below to get support or contact the owner:', reply_markup=reply_markup)
 
-    # Get user details
-    user_name = update.message.from_user.first_name  # User's first name
-    user_username = update.message.from_user.username  # User's username
-    user_id = update.message.from_user.id  # User's ID
-
-    # Prepare the log message
-    log_message = f"◈𝐍𝐀𝐌𝐄 {user_name} \n\n(◈𝐔𝐒𝐄𝐑𝐍𝐀𝐌𝐄: @{user_username if user_username else 'No Username'}, \n\n◈𝐈𝐃: {user_id}) ʜᴀs sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ"
-    
-    # Log the user who started the bot (but without sending a message to the logger group on VPS startup)
+    # Log the user who started the bot
+    user_name = update.message.from_user.first_name
+    user_username = update.message.from_user.username
+    user_id = update.message.from_user.id
+    log_message = (
+        f"◈𝐍𝐀𝐌𝐄 {user_name}\n\n"
+        f"(◈𝐔𝐒𝐄𝐑𝐍𝐀𝐌𝐄: @{user_username if user_username else 'No Username'},\n\n"
+        f"◈𝐈𝐃: {user_id}) ʜᴀs sᴛᴀʀᴛᴇᴅ ᴛʜᴇ ʙᴏᴛ"
+    )
     if not os.environ.get("IS_VPS"):
         await context.bot.send_message(chat_id=LOGGER_GROUP_CHAT_ID, text=log_message)
 
-    # Increment the user count in MongoDB
+    # Increment user count in MongoDB
     increment_user_count(user_id)
 
 async def help_command(update: Update, context: CallbackContext) -> None:

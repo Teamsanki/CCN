@@ -11,11 +11,11 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 # Bot Token and Database Configuration
-TELEGRAM_TOKEN = "YOUR_BOT_TOKEN"
-MONGO_URL = "YOUR_MONGO_URL"
-LOGGER_GROUP_CHAT_ID = "YOUR_LOGGER_GROUP_CHAT_ID"
-OWNER_SUPPORT_CHANNEL = "YOUR_SUPPORT_CHANNEL"
-OWNER_TELEGRAM_ID = "YOUR_OWNER_TELEGRAM_ID"
+TELEGRAM_TOKEN = "7955924885:AAE-dBnJeTYKu0vFSmF7AAYS0IZOlHeQNsg"
+MONGO_URL = "mongodb+srv://Teamsanki:Teamsanki@cluster0.jxme6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+LOGGER_GROUP_CHAT_ID = "-1002148651992"
+OWNER_SUPPORT_CHANNEL = "https://t.me/matalbi_duniya"
+OWNER_TELEGRAM_ID = "7877197608"
 
 # MongoDB setup
 client = MongoClient(MONGO_URL)
@@ -65,7 +65,7 @@ async def start(update: Update, context: CallbackContext) -> None:
         "🔹 Click below to access support or contact the owner directly!\n\n"
         "*Enjoy your experience! 🚀*"
     )
-    photo_url = "https://example.com/photo.jpg"  # Replace with actual photo URL
+    photo_url = "https://graph.org/file/6c0db28a848ed4dacae56-93b1bc1873b2494eb2.jpg"  # Replace with actual photo URL
 
     await update.message.reply_photo(photo_url, caption=welcome_text, parse_mode='Markdown')
     keyboard = [

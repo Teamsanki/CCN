@@ -52,9 +52,9 @@ async def start(update: Update, context: CallbackContext) -> None:
     # Attractive welcome message with a photo
     welcome_text = (
         "*🎉 Welcome to Our Bot, {user_name}! 🎉*\n\n"
-        "Hello, *{user_name}* 🔹 Need Help?: Type /help to view all the commands you can use with this bot.\n\n"
-        "🔹 Get Random Links: You can get random private group links anytime! Just type /getpvt to receive them.\n\n"
-        "🔹 Want to Promote Your Group?: If you’d like to promote your group, simply send a request with the message and link using the command: /req <your_message> <your_group_link>\n\n"
+        "Hello, *{user_name}* 👋\n\n"
+        "Thank you for starting the bot! We're here to help you.\n\n"
+        "🔹 Click below to access support or contact the owner directly!\n\n"
     ).format(user_name=update.message.from_user.first_name)
 
     # Send welcome message with a single photo

@@ -114,17 +114,35 @@ async def help_command(update: Update, context: CallbackContext) -> None:
 async def req(update: Update, context: CallbackContext) -> None:
     """User command to send a request message with their link to the owner."""
     user_id = update.message.from_user.id
+    user_name = update.message.from_user.first_name
+    user_username = update.message.from_user.username
+
     if len(context.args) < 2:
         await update.message.reply_text("Please provide a message and a link. Usage: /req <message> <link>")
         return
 
-    user_message = context.args[0]
-    user_link = context.args[1]
+    user_message = " ".join(context.args[:-1])  # Combine all arguments except the last one as message
+    user_link = context.args[-1]  # Last argument as link
 
     # Save the request to MongoDB
     requests_collection.insert_one({"user_id": user_id, "message": user_message, "link": user_link})
-    
-    await update.message.reply_text(f"Your request has been sent to the owner. Message: {user_message}, Link: {user_link}")
+
+    # Forward the request to the owner
+    owner_message = (
+        f"◈ 𝐔𝐬𝐞𝐫 𝐑𝐞𝐪𝐮𝐞𝐬𝐭 ◈\n\n"
+        f"◈ Name: {user_name}\n"
+        f"◈ Username: @{user_username if user_username else 'No Username'}\n"
+        f"◈ ID: {user_id}\n\n"
+        f"◈ Message: {user_message}\n"
+        f"◈ Link: {user_link}"
+    )
+
+    try:
+        await context.bot.send_message(chat_id=OWNER_TELEGRAM_ID, text=owner_message)
+        await update.message.reply_text("Your request has been sent to the owner successfully.")
+    except Exception as e:
+        logger.error(f"Error sending message to owner: {e}")
+        await update.message.reply_text("There was an error sending your request to the owner. Please try again later.")
 
 async def for_command(update: Update, context: CallbackContext) -> None:
     """Owner-only command to forward a user's message to the specified user."""

@@ -66,7 +66,7 @@ async def start(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [InlineKeyboardButton("🛠 Contact Support", url=OWNER_SUPPORT_CHANNEL)],
         [InlineKeyboardButton("💬 Message Owner", url=f"tg://user?id={OWNER_TELEGRAM_ID}")],
-        [InlineKeyboardButton("Help", callback_data="help")]
+        [InlineKeyboardButton("Help", callback_data="help_command")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -95,7 +95,8 @@ async def help_command(update: Update, context: CallbackContext) -> None:
         "*User Commands:*\n"
         "1. /start - Start the bot\n"
         "2. /getpvt - Get random private group links\n\n"
-        "3. /stats - Get bot Stats\n\n"
+        "3. /stats - Get bot Stats\n"
+        "4. /req <message> <link> - Request to add your link\n\n"
     )
 
     keyboard = [
@@ -131,6 +132,41 @@ async def getpvt(update: Update, context: CallbackContext) -> None:
     else:
         await update.message.reply_text("No private group links available yet. Please try again later.")
 
+async def req(update: Update, context: CallbackContext) -> None:
+    """User's request to add their link, sends message to the owner."""
+    if len(context.args) < 2:
+        await update.message.reply_text("Please provide a message and your link. Usage: /req <message> <link>")
+        return
+
+    user_message = context.args[0]
+    user_link = context.args[1]
+    user_id = update.message.from_user.id
+
+    # Forward the message to the owner
+    owner_message = f"User ID: {user_id}\nMessage: {user_message}\nLink: {user_link}"
+    await context.bot.send_message(chat_id=OWNER_TELEGRAM_ID, text=owner_message)
+
+    await update.message.reply_text("Your request has been forwarded to the owner. You will be notified once the link is added.")
+
+async def for_command(update: Update, context: CallbackContext) -> None:
+    """Owner-only command to send a response to a user."""
+    if update.message.from_user.id != int(OWNER_TELEGRAM_ID):
+        await update.message.reply_text("This command is restricted to the owner only.")
+        return
+
+    if len(context.args) < 2:
+        await update.message.reply_text("Please provide the user ID and your message. Usage: /for <user_id> <message>")
+        return
+
+    user_id = context.args[0]
+    message = " ".join(context.args[1:])
+
+    try:
+        await context.bot.send_message(user_id, message)
+        await update.message.reply_text(f"Message sent to user ID {user_id}: {message}")
+    except Exception as e:
+        await update.message.reply_text(f"Failed to send message to user {user_id}. Error: {e}")
+
 async def broadcast(update: Update, context: CallbackContext) -> None:
     """Owner-only command to send a broadcast message to all users."""
     if update.message.from_user.id != int(OWNER_TELEGRAM_ID):
@@ -139,75 +175,34 @@ async def broadcast(update: Update, context: CallbackContext) -> None:
 
     # Check if the message contains the text to broadcast
     if not context.args:
-        await update.message.reply_text("Please provide a message to broadcast. Usage: /broadcast <message>")
+        await update.message.reply_text("Please provide the message to broadcast.")
         return
 
-    broadcast_message = " ".join(context.args)
-
-    # Get all users from MongoDB
-    users = users_collection.find()
+    message = " ".join(context.args)
 
     # Send the message to all users
-    for user in users:
+    for user in users_collection.find():
+        user_id = user['user_id']
         try:
-            await context.bot.send_message(user['user_id'], broadcast_message)
+            await context.bot.send_message(user_id, message)
         except Exception as e:
-            logger.error(f"Error sending message to {user['user_id']}: {e}")
+            logger.error(f"Failed to send message to user {user_id}: {e}")
 
-    await update.message.reply_text(f"Broadcast message sent to all users: {broadcast_message}")
-
-async def stats(update: Update, context: CallbackContext) -> None:
-    """Shows the bot statistics like number of users and private group links."""
-    # Get the number of users and private groups
-    user_count = users_collection.count_documents({})
-    group_count = private_groups_collection.count_documents({})
-
-    stats_message = (
-        f"*Bot Stats:*\n"
-        f"Total Users: {user_count}\n"
-        f"Total Private Group Links: {group_count}"
-    )
-
-    await update.message.reply_text(stats_message)
-
-async def addgc(update: Update, context: CallbackContext) -> None:
-    """Owner-only command to add a private group link."""
-    if update.message.from_user.id != int(OWNER_TELEGRAM_ID):
-        await update.message.reply_text("This command is restricted to the owner only.")
-        return
-
-    if not context.args:
-        await update.message.reply_text("Please provide the private group link. Usage: /addgc <group_link>")
-        return
-
-    group_link = context.args[0]
-
-    # Insert the group link into MongoDB
-    try:
-        private_groups_collection.insert_one({"link": group_link})
-        await update.message.reply_text(f"Group link added: {group_link}")
-    except Exception as e:
-        await update.message.reply_text(f"Failed to add the group link. Error: {e}")
-
-async def ping(update: Update, context: CallbackContext) -> None:
-    """Respond with the bot's uptime."""
-    uptime = get_uptime()
-    await update.message.reply_text(f"Bot Uptime: {uptime}")
+    await update.message.reply_text(f"Broadcast message sent to all users.")
 
 def main():
     """Start the bot."""
     application = Application.builder().token(TELEGRAM_TOKEN).build()
 
-    # Add command handlers
+    # Command handlers
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("addgc", addgc))  # Command to add a private group link
-    application.add_handler(CommandHandler("getpvt", getpvt))  # Command to get private group links
-    application.add_handler(CommandHandler("help", help_command))  # Command for showing help
-    application.add_handler(CommandHandler("ping", ping))  # Command for checking uptime
-    application.add_handler(CommandHandler("broadcast", broadcast))  # Command to send a broadcast
-    application.add_handler(CommandHandler("stats", stats))  # Command to show stats
+    application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler("getpvt", getpvt))
+    application.add_handler(CommandHandler("req", req))
+    application.add_handler(CommandHandler("for", for_command))
+    application.add_handler(CommandHandler("broadcast", broadcast))
 
-    # Start the Bot
+    # Run the bot until you send a signal (Ctrl+C or stop)
     application.run_polling()
 
 if __name__ == '__main__':

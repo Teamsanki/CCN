@@ -261,10 +261,7 @@ async def addgc(update: Update, context: CallbackContext) -> None:
     private_groups_collection.insert_one({"name": group_name, "link": group_link})
 
     await update.message.reply_text(f"Group '{group_name}' has been successfully added!")
-
-# Register the new command handler
-application.add_handler(CommandHandler("addgc", addgc))
-# Main function to run the bot
+  
 def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()
 

@@ -241,7 +241,27 @@ async def stats(update: Update, context: CallbackContext) -> None:
         f"◈ Uptime: {uptime}\n\n"
         "*Keep up the great work! 🚀*"
     )
+  #addgc group link add
+    async def addgc(update: Update, context: CallbackContext) -> None:
+    """Owner-only command to add a private group link."""
+    if update.message.from_user.id != int(OWNER_TELEGRAM_ID):
+        await update.message.reply_text("This command is restricted to the owner only.")
+        return
 
+    if len(context.args) < 2:
+        await update.message.reply_text("Please provide the group name and link. Usage: /addgc <group_name> <link>")
+        return
+
+    group_name = context.args[0]  # First argument is the group name
+    group_link = context.args[1]  # Second argument is the group link
+
+    # Save the group link to MongoDB
+    private_groups_collection.insert_one({"name": group_name, "link": group_link})
+
+    await update.message.reply_text(f"Group '{group_name}' has been successfully added!")
+
+# Register the new command handler
+application.add_handler(CommandHandler("addgc", addgc))
     # Send the statistics message
     await update.message.reply_text(stats_message)
 # Main function to run the bot

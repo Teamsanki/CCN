@@ -51,11 +51,15 @@ async def start(update: Update, context: CallbackContext) -> None:
 
     # Attractive welcome message with a photo
     welcome_text = (
-        "*🎉 Welcome to Our Bot, {user_name}! 🎉*\n\n"
-        "Hello, *{user_name}* 👋\n\n"
-        "Thank you for starting the bot! We're here to help you.\n\n"
-        "🔹 Click below to access support or contact the owner directly!\n\n"
-        "*Enjoy your experience! 🚀*"
+        "*🎉 Wᴇʟᴄᴏᴍᴇ ᴛᴏ ᴛʜᴇ 𝐒𝐀𝐍𝐊𝐈 𝐆𝐂 𝐋𝐈𝐍𝐊 Bᴏᴛ! 🎉*\ɴ\ɴ"
+        "Hᴇʟʟᴏ, *{user_name}* 👋\ɴ\ɴ"
+        "Tʜᴀɴᴋ ʏᴏᴜ ғᴏʀ ᴄʜᴏᴏsɪɴɢ ᴏᴜʀ ʙᴏᴛ! Hᴇʀᴇ’s ʜᴏᴡ ɪᴛ ᴄᴀɴ ʜᴇʟᴘ ʏᴏᴜ:\ɴ\ɴ"
+        "🔹 Gᴇᴛ Rᴀɴᴅᴏᴍ Lɪɴᴋs: Yᴏᴜ ᴄᴀɴ ɢᴇᴛ ʀᴀɴᴅᴏᴍ ᴘʀɪᴠᴀᴛᴇ ɢʀᴏᴜᴘ ʟɪɴᴋs ᴀɴʏᴛɪᴍᴇ! Jᴜsᴛ ᴛʏᴘᴇ /ɢᴇᴛᴘᴠᴛ ᴛᴏ ʀᴇᴄᴇɪᴠᴇ ᴛʜᴇᴍ.\ɴ\ɴ"
+        "🔹 Wᴀɴᴛ ᴛᴏ Pʀᴏᴍᴏᴛᴇ Yᴏᴜʀ Gʀᴏᴜᴘ?: Iғ ʏᴏᴜ’ᴅ ʟɪᴋᴇ ᴛᴏ ᴘʀᴏᴍᴏᴛᴇ ʏᴏᴜʀ ɢʀᴏᴜᴘ, sɪᴍᴘʟʏ sᴇɴᴅ ᴀ ʀᴇǫᴜᴇsᴛ ᴡɪᴛʜ ᴛʜᴇ ᴍᴇssᴀɢᴇ ᴀɴᴅ ʟɪɴᴋ ᴜsɪɴɢ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅ:\ɴ"
+        "/req <ʏᴏᴜʀ_ᴍᴇssᴀɢᴇ> <ʏᴏᴜʀ_ɢʀᴏᴜᴘ_ʟɪɴᴋ>\ɴ\ɴ"
+        "Oɴᴄᴇ ʏᴏᴜʀ ʀᴇǫᴜᴇsᴛ ɪs ʀᴇᴄᴇɪᴠᴇᴅ, ᴛʜᴇ ʙᴏᴛ ᴏᴡɴᴇʀ ᴡɪʟʟ ʀᴇᴠɪᴇᴡ ɪᴛ ᴀɴᴅ ɢᴇᴛ ʙᴀᴄᴋ ᴛᴏ ʏᴏᴜ! Fᴏʀ ᴍᴏʀᴇ ᴅᴇᴛᴀɪʟs, ғᴇᴇʟ ғʀᴇᴇ ᴛᴏ DM @TSGCODER 📩\ɴ\ɴ"
+        "🔹 Nᴇᴇᴅ Hᴇʟᴘ?: Tʏᴘᴇ /help ᴛᴏ ᴠɪᴇᴡ ᴀʟʟ ᴛʜᴇ ᴄᴏᴍᴍᴀɴᴅs ʏᴏᴜ ᴄᴀɴ ᴜsᴇ ᴡɪᴛʜ ᴛʜɪs ʙᴏᴛ.\ɴ\ɴ"
+        "Tʜɪs ʙᴏᴛ ʜᴀs ʙᴇᴇɴ ᴄʀᴇᴀᴛᴇᴅ ᴡɪᴛʜ ❤️ ʙʏ Tᴇᴀᴍ Sᴀɴᴋɪ. Wᴇ ʜᴏᴘᴇ ʏᴏᴜ ᴇɴJᴏʏ ʏᴏᴜʀ ᴇxᴘᴇʀɪᴇɴᴄᴇ! 🚀 Fᴇᴇʟ ғʀᴇᴇ ᴛᴏ ʀᴇᴀᴄʜ ᴏᴜᴛ ɪғ ʏᴏᴜ ɴᴇᴇᴅ ᴀɴʏ ᴀssɪsᴛᴀɴᴄᴇ. 😇"
     ).format(user_name=update.message.from_user.first_name)
 
     # Send welcome message with photo and Markdown formatting

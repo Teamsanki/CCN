@@ -186,4 +186,13 @@ def main():
     application.add_handler(CommandHandler("ping", ping))  # Command for checking uptime
 
     # Add callback query handlers
-    application.add_handler(CallbackQueryHandler(help_command,
+    application.add_handler(CallbackQueryHandler(help_command, pattern='help'))
+    application.add_handler(CallbackQueryHandler(user_commands, pattern='user_commands'))
+    application.add_handler(CallbackQueryHandler(admin_commands, pattern='admin_commands'))
+    application.add_handler(CallbackQueryHandler(getpvt, pattern='user_getpvt'))
+
+    # Start the Bot
+    application.run_polling()
+
+if __name__ == '__main__':
+    main()

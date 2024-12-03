@@ -12,17 +12,17 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 # Replace this with your bot's token from BotFather
-TELEGRAM_TOKEN = "7955924885:AAE-dBnJeTYKu0vFSmF7AAYS0IZOlHeQNsg"
+TELEGRAM_TOKEN = "YOUR_BOT_TOKEN"
 
 # MongoDB URL
-MONGO_URL = "mongodb+srv://Teamsanki:Teamsanki@cluster0.jxme6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+MONGO_URL = "YOUR_MONGODB_URL"
 
 # Replace this with your logger group chat ID (it should be negative for groups)
-LOGGER_GROUP_CHAT_ID = "-1002100433415"
+LOGGER_GROUP_CHAT_ID = "LOGGER_ID"
 
 # Replace with your support channel link and owner's Telegram ID
-OWNER_SUPPORT_CHANNEL = "https://t.me/matalbi_duniya"
-OWNER_TELEGRAM_ID = "7877197608"
+OWNER_SUPPORT_CHANNEL = "YOUR_CHANNEL_URL_OR_GROUP_URL"
+OWNER_TELEGRAM_ID = "OWNER_ID"
 
 # MongoDB Client and Database
 client = MongoClient(MONGO_URL)
@@ -141,7 +141,7 @@ async def admin_commands(update: Update, context: CallbackContext) -> None:
 async def verify_admin_password(update: Update, context: CallbackContext) -> None:
     """Verifies the admin password and shows admin commands."""
     password = update.message.text
-    if password == "SKCC112566":
+    if password == "SKCC11256#":
         admin_commands_text = (
             "Admin Commands:\n"
             "/addgc - Add a private group link\n"

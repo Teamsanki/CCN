@@ -265,17 +265,18 @@ async def addgc(update: Update, context: CallbackContext) -> None:
         await update.message.reply_text("This command is restricted to the owner only.")
         return
 
-    if len(context.args) < 2:
-        await update.message.reply_text("Please provide the group name and link. Usage: /addgc <group_name> <link>")
+    if not context.args:
+        await update.message.reply_text("Please provide the private group link. Usage: /addgc <group_link>")
         return
 
-    group_name = context.args[0]  # First argument is the group name
-    group_link = context.args[1]  # Second argument is the group link
+    group_link = context.args[0]
 
-    # Save the group link to MongoDB
-    private_groups_collection.insert_one({"name": group_name, "link": group_link})
-
-    await update.message.reply_text(f"Group '{group_name}' has been successfully added!")
+    # Insert the group link into MongoDB
+    try:
+        private_groups_collection.insert_one({"link": group_link})
+        await update.message.reply_text(f"Group link added: {group_link}")
+    except Exception as e:
+        await update.message.reply_text(f"Failed to add the group link. Error: {e}")
   
 def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()

@@ -106,7 +106,13 @@ async def help_command(update: Update, context: CallbackContext) -> None:
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
+    # Send help message with commands and inline keyboard
     await update.message.reply_text(help_text, reply_markup=reply_markup)
+
+    # If the user clicks "Back," return to the previous state or main options
+    if update.callback_query and update.callback_query.data == "back":
+        await update.callback_query.answer()
+        # You can add logic to return to the initial bot options or menu here.
 
 async def req(update: Update, context: CallbackContext) -> None:
     """User command to send a request message with their link to the owner."""

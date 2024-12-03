@@ -163,16 +163,26 @@ async def for_command(update: Update, context: CallbackContext) -> None:
     except Exception as e:
         await update.message.reply_text(f"Error forwarding message: {e}")
 
+from urllib.parse import urlparse
+
+def is_valid_url(url):
+    """Check if a given URL is valid."""
+    parsed = urlparse(url)
+    return bool(parsed.netloc) and bool(parsed.scheme)
+
 async def getpvt(update: Update, context: CallbackContext) -> None:
     """Fetches random private group links."""
     # Fetch all group links from the database
     group_links = private_groups_collection.find()
     group_links_list = list(group_links)
 
-    if len(group_links_list) > 0:
+    # Filter out invalid links
+    valid_links = [link for link in group_links_list if is_valid_url(link.get('link', ''))]
+
+    if len(valid_links) > 0:
         # Ensure we only sample the number of links available
-        sample_size = min(10, len(group_links_list))
-        random_links = random.sample(group_links_list, sample_size)
+        sample_size = min(10, len(valid_links))
+        random_links = random.sample(valid_links, sample_size)
 
         # Dynamically create the keyboard based on the number of links
         keyboard = []

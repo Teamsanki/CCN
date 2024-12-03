@@ -97,11 +97,6 @@ async def help_command(update: Update, context: CallbackContext) -> None:
         "1. /start - Start the bot\n"
         "2. /getpvt - Get random private group links\n"
         "3. /req <message> <link> - Send a request with your message and link to the owner\n\n"
-        "*Owner Commands:*\n"
-        "1. /for <user_id> <message> - Forward the message from the user to the specified user\n"
-        "2. /broadcast - Send a broadcast message to all users\n"
-        "3. /addgc - Add private group link\n"
-        "4. /stats - View bot statistics"
     )
 
     keyboard = [

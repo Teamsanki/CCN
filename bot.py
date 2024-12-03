@@ -226,10 +226,6 @@ async def getpvt(update: Update, context: CallbackContext) -> None:
         await update.message.reply_text(
             "Nᴏ ᴘʀɪᴠᴀᴛᴇ ɢʀᴏᴜᴘ ʟɪɴᴋs ᴀᴠᴀɪʟᴀʙʟᴇ ʏᴇᴛ. Pʟᴇᴀsᴇ ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ"
         )
-    else:
-        await update.message.reply_text(
-            "Nᴏ ᴘʀɪᴠᴀᴛᴇ ɢʀᴏᴜᴘ ʟɪɴᴋs ᴀᴠᴀɪʟᴀʙʟᴇ ʏᴇᴛ. Pʟᴇᴀsᴇ ᴛʀʏ ᴀɢᴀɪɴ ʟᴀᴛᴇʀ"
-        )
 
 async def broadcast(update: Update, context: CallbackContext) -> None:
     """Owner-only command to send a broadcast message to all users."""

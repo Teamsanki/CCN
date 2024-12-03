@@ -65,9 +65,9 @@ async def start(update: Update, context: CallbackContext) -> None:
 
     # Create an inline keyboard with a link to the owner's support channel and owner's Telegram ID
     keyboard = [
-        [InlineKeyboardButton("🛠 Contact Support", url=OWNER_SUPPORT_CHANNEL)],
-        [InlineKeyboardButton("💬 Message Owner", url=f"tg://user?id={OWNER_TELEGRAM_ID}")],
-        [InlineKeyboardButton("Help", callback_data="help")]
+        [InlineKeyboardButton("Sᴜᴘᴘᴏʀᴛ", url=OWNER_SUPPORT_CHANNEL)],
+        [InlineKeyboardButton("Oᴡɴᴇʀ", url=f"tg://user?id={OWNER_TELEGRAM_ID}")],
+        [InlineKeyboardButton("Hᴇʟᴘ", callback_data="help")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 

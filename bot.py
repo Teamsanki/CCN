@@ -276,6 +276,7 @@ def main():
     application.add_handler(CommandHandler("broadcast", broadcast))
     application.add_handler(CommandHandler("for", for_command))
     application.add_handler(CommandHandler("stats", stats))
+    application.add_handler(CommandHandler("addgc", addgc))
 
     # Run the bot
     application.run_polling()

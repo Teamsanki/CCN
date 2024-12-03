@@ -241,8 +241,10 @@ async def stats(update: Update, context: CallbackContext) -> None:
         f"◈ Uptime: {uptime}\n\n"
         "*Keep up the great work! 🚀*"
     )
-  #addgc group link add
-    async def addgc(update: Update, context: CallbackContext) -> None:
+    # Send the statistics message
+    await update.message.reply_text(stats_message)
+  # Add private group link (Owner-only command)
+async def addgc(update: Update, context: CallbackContext) -> None:
     """Owner-only command to add a private group link."""
     if update.message.from_user.id != int(OWNER_TELEGRAM_ID):
         await update.message.reply_text("This command is restricted to the owner only.")
@@ -262,8 +264,6 @@ async def stats(update: Update, context: CallbackContext) -> None:
 
 # Register the new command handler
 application.add_handler(CommandHandler("addgc", addgc))
-    # Send the statistics message
-    await update.message.reply_text(stats_message)
 # Main function to run the bot
 def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()

@@ -201,8 +201,28 @@ async def stats(update: Update, context: CallbackContext) -> None:
 
     # Get user count from MongoDB
     user_count = users_collection.count_documents({})
-    await update.message.reply_text(f"Total number of users: {user_count}")
 
+    # Get the number of requests in the database
+    request_count = requests_collection.count_documents({})
+
+    # Get the number of private groups in the database
+    group_count = private_groups_collection.count_documents({})
+
+    # Get uptime of the bot
+    uptime = get_uptime()
+
+    # Prepare the statistics message
+    stats_message = (
+        "*Bot Statistics:*\n\n"
+        f"◈ Total number of users: {user_count}\n"
+        f"◈ Total number of requests: {request_count}\n"
+        f"◈ Total number of private groups: {group_count}\n"
+        f"◈ Uptime: {uptime}\n\n"
+        "*Keep up the great work! 🚀*"
+    )
+
+    # Send the statistics message
+    await update.message.reply_text(stats_message)
 # Main function to run the bot
 def main():
     application = Application.builder().token(TELEGRAM_TOKEN).build()

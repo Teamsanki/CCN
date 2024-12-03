@@ -184,9 +184,9 @@ async def getpvt(update: Update, context: CallbackContext) -> None:
         time_diff = (current_time - last_used_time).total_seconds()
 
         # If the command is used within 5 seconds, send a delay message
-        if time_diff < 5:
+        if time_diff < 10:
             await update.message.reply_text(
-                f"⚠️ Please wait {5 - int(time_diff)} seconds before using this command again."
+                f"⚠️ Please wait {10 - int(time_diff)} seconds before using this command again."
             )
             return
 

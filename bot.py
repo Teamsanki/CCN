@@ -54,7 +54,7 @@ async def start(update: Update, context: CallbackContext) -> None:
         "*🎉 Welcome to Our Bot, {user_name}! 🎉*\n\n"
         "Hello, *{user_name}* 🔹 Need Help?: Type /help to view all the commands you can use with this bot.\n\n"
         "🔹 Get Random Links: You can get random private group links anytime! Just type /getpvt to receive them.\n\n"
-        "🔹 Want to Promote Your Group?: If you’d like to promote your group, simply send a request with the message and link using the command: /req <your_message> <your_group_link>\n\nOnce your request is received, the bot owner will review it and get back to you! For more details, feel free to DM @TSGCODER 📩\n\n"
+        "🔹 Want to Promote Your Group?: If you’d like to promote your group, simply send a request with the message and link using the command: /req <your_message> <your_group_link>\n\n"
     ).format(user_name=update.message.from_user.first_name)
 
     # Send welcome message with a single photo

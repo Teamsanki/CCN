@@ -90,45 +90,22 @@ async def start(update: Update, context: CallbackContext) -> None:
 
 async def help_command(update: Update, context: CallbackContext) -> None:
     """Shows available commands to the user."""
+    help_text = (
+        "*Available Commands:*\n\n"
+        "*User Commands:*\n"
+        "1. /start - Start the bot\n"
+        "2. /getpvt - Get random private group links\n\n"
+        "3. /stats - Get bot Stats\n\n"
+    )
+
     keyboard = [
-        [InlineKeyboardButton("User Commands", callback_data="user_commands")],
-        [InlineKeyboardButton("Admin Commands", callback_data="admin_commands")],
+        [InlineKeyboardButton("🛠 Contact Support", url=OWNER_SUPPORT_CHANNEL)],
+        [InlineKeyboardButton("💬 Message Owner", url=f"tg://user?id={OWNER_TELEGRAM_ID}")],
         [InlineKeyboardButton("Back", callback_data="back")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("Choose a category of commands:", reply_markup=reply_markup)
 
-async def user_commands(update: Update, context: CallbackContext) -> None:
-    """Shows user commands."""
-    keyboard = [
-        [InlineKeyboardButton("/start - Start the bot", callback_data="user_start")],
-        [InlineKeyboardButton("/getpvt - Get random private group links", callback_data="user_getpvt")],
-        [InlineKeyboardButton("Back", callback_data="help")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.callback_query.answer()  # Acknowledge the button click
-    await update.callback_query.edit_message_text("User Commands:", reply_markup=reply_markup)
-
-async def admin_commands(update: Update, context: CallbackContext) -> None:
-    """Shows admin commands if the user is an admin."""
-    if update.callback_query.from_user.id != int(OWNER_TELEGRAM_ID):
-        keyboard = [
-            [InlineKeyboardButton("Back", callback_data="help")]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        await update.callback_query.answer("You are not an admin!")
-        await update.callback_query.edit_message_text("You are not an admin.", reply_markup=reply_markup)
-        return
-
-    keyboard = [
-        [InlineKeyboardButton("/addgc - Add private group link", callback_data="admin_addgc")],
-        [InlineKeyboardButton("/resetgc - Reset private group links", callback_data="admin_resetgc")],
-        [InlineKeyboardButton("/deletegc - Delete private group link", callback_data="admin_deletegc")],
-        [InlineKeyboardButton("Back", callback_data="help")]
-    ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.callback_query.answer()  # Acknowledge the button click
-    await update.callback_query.edit_message_text("Admin Commands:", reply_markup=reply_markup)
+    await update.message.reply_text(help_text, reply_markup=reply_markup)
 
 async def getpvt(update: Update, context: CallbackContext) -> None:
     """Fetches random private group links."""
@@ -139,16 +116,59 @@ async def getpvt(update: Update, context: CallbackContext) -> None:
         random_links = random.sample(group_links_list, 6)
         keyboard = [
             [
-                InlineKeyboardButton(random_links[i]['link'], url=random_links[i]['link']) for i in range(3)
+                InlineKeyboardButton(f"Group 1", url=random_links[0]['link']),
+                InlineKeyboardButton(f"Group 2", url=random_links[1]['link']),
+                InlineKeyboardButton(f"Group 3", url=random_links[2]['link'])
             ],
             [
-                InlineKeyboardButton(random_links[i]['link'], url=random_links[i]['link']) for i in range(3, 6)
+                InlineKeyboardButton(f"Group 4", url=random_links[3]['link']),
+                InlineKeyboardButton(f"Group 5", url=random_links[4]['link']),
+                InlineKeyboardButton(f"Group 6", url=random_links[5]['link'])
             ]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await update.message.reply_text("Here are 6 random private group links:", reply_markup=reply_markup)
     else:
         await update.message.reply_text("No private group links available yet. Please try again later.")
+
+async def broadcast(update: Update, context: CallbackContext) -> None:
+    """Owner-only command to send a broadcast message to all users."""
+    if update.message.from_user.id != int(OWNER_TELEGRAM_ID):
+        await update.message.reply_text("This command is restricted to the owner only.")
+        return
+
+    # Check if the message contains the text to broadcast
+    if not context.args:
+        await update.message.reply_text("Please provide a message to broadcast. Usage: /broadcast <message>")
+        return
+
+    broadcast_message = " ".join(context.args)
+
+    # Get all users from MongoDB
+    users = users_collection.find()
+
+    # Send the message to all users
+    for user in users:
+        try:
+            await context.bot.send_message(user['user_id'], broadcast_message)
+        except Exception as e:
+            logger.error(f"Error sending message to {user['user_id']}: {e}")
+
+    await update.message.reply_text(f"Broadcast message sent to all users: {broadcast_message}")
+
+async def stats(update: Update, context: CallbackContext) -> None:
+    """Shows the bot statistics like number of users and private group links."""
+    # Get the number of users and private groups
+    user_count = users_collection.count_documents({})
+    group_count = private_groups_collection.count_documents({})
+
+    stats_message = (
+        f"*Bot Stats:*\n"
+        f"Total Users: {user_count}\n"
+        f"Total Private Group Links: {group_count}"
+    )
+
+    await update.message.reply_text(stats_message)
 
 async def addgc(update: Update, context: CallbackContext) -> None:
     """Owner-only command to add a private group link."""
@@ -184,12 +204,8 @@ def main():
     application.add_handler(CommandHandler("getpvt", getpvt))  # Command to get private group links
     application.add_handler(CommandHandler("help", help_command))  # Command for showing help
     application.add_handler(CommandHandler("ping", ping))  # Command for checking uptime
-
-    # Add callback query handlers
-    application.add_handler(CallbackQueryHandler(help_command, pattern='help'))
-    application.add_handler(CallbackQueryHandler(user_commands, pattern='user_commands'))
-    application.add_handler(CallbackQueryHandler(admin_commands, pattern='admin_commands'))
-    application.add_handler(CallbackQueryHandler(getpvt, pattern='user_getpvt'))
+    application.add_handler(CommandHandler("broadcast", broadcast))  # Command to send a broadcast
+    application.add_handler(CommandHandler("stats", stats))  # Command to show stats
 
     # Start the Bot
     application.run_polling()

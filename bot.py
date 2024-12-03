@@ -29,6 +29,7 @@ client = MongoClient(MONGO_URL)
 db = client['bot_database']
 users_collection = db['users']
 private_groups_collection = db['private_groups']
+requests_collection = db['requests']
 
 # Bot start time (used for uptime calculation)
 bot_start_time = datetime.now()
@@ -66,7 +67,7 @@ async def start(update: Update, context: CallbackContext) -> None:
     keyboard = [
         [InlineKeyboardButton("🛠 Contact Support", url=OWNER_SUPPORT_CHANNEL)],
         [InlineKeyboardButton("💬 Message Owner", url=f"tg://user?id={OWNER_TELEGRAM_ID}")],
-        [InlineKeyboardButton("Help", callback_data="help_command")]
+        [InlineKeyboardButton("Help", callback_data="help")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -96,7 +97,9 @@ async def help_command(update: Update, context: CallbackContext) -> None:
         "1. /start - Start the bot\n"
         "2. /getpvt - Get random private group links\n\n"
         "3. /stats - Get bot Stats\n"
-        "4. /req <message> <link> - Request to add your link\n\n"
+        "4. /req - Send your private group link request to the owner\n\n"
+        "*Owner Commands:*\n"
+        "1. /for <user_id> <message> - Send a message to a specific user"
     )
 
     keyboard = [
@@ -109,100 +112,77 @@ async def help_command(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text(help_text, reply_markup=reply_markup)
 
 async def getpvt(update: Update, context: CallbackContext) -> None:
-    """Fetches random private group links."""
+    """Fetches 10 random private group links."""
     group_links = private_groups_collection.find()
     group_links_list = list(group_links)
 
-    if len(group_links_list) > 0:
-        random_links = random.sample(group_links_list, 6)
+    if len(group_links_list) >= 10:
+        random_links = random.sample(group_links_list, 10)
         keyboard = [
-            [
-                InlineKeyboardButton(f"Group 1", url=random_links[0]['link']),
-                InlineKeyboardButton(f"Group 2", url=random_links[1]['link']),
-                InlineKeyboardButton(f"Group 3", url=random_links[2]['link'])
-            ],
-            [
-                InlineKeyboardButton(f"Group 4", url=random_links[3]['link']),
-                InlineKeyboardButton(f"Group 5", url=random_links[4]['link']),
-                InlineKeyboardButton(f"Group 6", url=random_links[5]['link'])
-            ]
+            [InlineKeyboardButton(f"Group {i+1}", url=random_links[i]['link']) for i in range(5)],
+            [InlineKeyboardButton(f"Group {i+6}", url=random_links[i+5]['link']) for i in range(5)]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await update.message.reply_text("Here are 6 random private group links:", reply_markup=reply_markup)
+        await update.message.reply_text("Here are 10 random private group links:", reply_markup=reply_markup)
     else:
         await update.message.reply_text("No private group links available yet. Please try again later.")
 
 async def req(update: Update, context: CallbackContext) -> None:
-    """User's request to add their link, sends message to the owner."""
-    if len(context.args) < 2:
-        await update.message.reply_text("Please provide a message and your link. Usage: /req <message> <link>")
+    """Allows users to request to add their private group link."""
+    user_id = update.message.from_user.id
+    if not context.args:
+        await update.message.reply_text("Please provide your private group link. Usage: /req <link>")
         return
 
-    user_message = context.args[0]
-    user_link = context.args[1]
-    user_id = update.message.from_user.id
+    group_link = context.args[0]
+    request_message = f"User ID: {user_id}\nRequested Link: {group_link}"
 
-    # Forward the message to the owner
-    owner_message = f"User ID: {user_id}\nMessage: {user_message}\nLink: {user_link}"
-    await context.bot.send_message(chat_id=OWNER_TELEGRAM_ID, text=owner_message)
-
-    await update.message.reply_text("Your request has been forwarded to the owner. You will be notified once the link is added.")
+    # Save the request to MongoDB
+    try:
+        requests_collection.insert_one({"user_id": user_id, "message": request_message})
+        await update.message.reply_text(f"Your request has been sent to the owner.")
+        # Send the request to the owner
+        await context.bot.send_message(chat_id=OWNER_TELEGRAM_ID, text=request_message)
+    except Exception as e:
+        await update.message.reply_text(f"Failed to send your request. Error: {e}")
 
 async def for_command(update: Update, context: CallbackContext) -> None:
-    """Owner-only command to send a response to a user."""
+    """Owner command to forward message to a user."""
     if update.message.from_user.id != int(OWNER_TELEGRAM_ID):
         await update.message.reply_text("This command is restricted to the owner only.")
         return
 
     if len(context.args) < 2:
-        await update.message.reply_text("Please provide the user ID and your message. Usage: /for <user_id> <message>")
+        await update.message.reply_text("Please provide the user ID and message. Usage: /for <user_id> <message>")
         return
 
-    user_id = context.args[0]
+    user_id = int(context.args[0])
     message = " ".join(context.args[1:])
 
     try:
         await context.bot.send_message(user_id, message)
-        await update.message.reply_text(f"Message sent to user ID {user_id}: {message}")
+        await update.message.reply_text(f"Message sent to user {user_id}.")
     except Exception as e:
-        await update.message.reply_text(f"Failed to send message to user {user_id}. Error: {e}")
+        await update.message.reply_text(f"Failed to send message. Error: {e}")
 
-async def broadcast(update: Update, context: CallbackContext) -> None:
-    """Owner-only command to send a broadcast message to all users."""
-    if update.message.from_user.id != int(OWNER_TELEGRAM_ID):
-        await update.message.reply_text("This command is restricted to the owner only.")
-        return
-
-    # Check if the message contains the text to broadcast
-    if not context.args:
-        await update.message.reply_text("Please provide the message to broadcast.")
-        return
-
-    message = " ".join(context.args)
-
-    # Send the message to all users
-    for user in users_collection.find():
-        user_id = user['user_id']
-        try:
-            await context.bot.send_message(user_id, message)
-        except Exception as e:
-            logger.error(f"Failed to send message to user {user_id}: {e}")
-
-    await update.message.reply_text(f"Broadcast message sent to all users.")
+async def ping(update: Update, context: CallbackContext) -> None:
+    """Respond with the bot's uptime."""
+    uptime = get_uptime()
+    await update.message.reply_text(f"Bot Uptime: {uptime}")
 
 def main():
     """Start the bot."""
     application = Application.builder().token(TELEGRAM_TOKEN).build()
 
-    # Command handlers
+    # Add command handlers
     application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("addgc", add_group))
+    application.add_handler(CommandHandler("req", req))
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("getpvt", getpvt))
-    application.add_handler(CommandHandler("req", req))
+    application.add_handler(CommandHandler("stats", ping))
     application.add_handler(CommandHandler("for", for_command))
-    application.add_handler(CommandHandler("broadcast", broadcast))
 
-    # Run the bot until you send a signal (Ctrl+C or stop)
     application.run_polling()
 
 if __name__ == '__main__':

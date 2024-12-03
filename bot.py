@@ -1,7 +1,6 @@
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, InputMediaPhoto
-from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler
-import os
+from telegram.ext import Application, CommandHandler, CallbackContext, CallbackQueryHandler, MessageHandler, filters
 from pymongo import MongoClient
 from datetime import datetime
 import random
@@ -187,18 +186,34 @@ async def verify_admin_password(update: Update, context: CallbackContext) -> Non
             "/addgc - Add private group link\n"
             "/getpvt - Get private group links\n"
             "/stats - View bot stats\n"
+            "/broadcast - Broadcast a message to all users\n"
             "/help - Show this help message"
         )
         await update.message.reply_text(admin_commands_text)
     else:
         await update.message.reply_text("Incorrect password. Please start the bot again.")
 
-async def stats(update: Update, context: CallbackContext) -> None:
-    """Shows bot stats like the number of users and private groups."""
-    total_users = users_collection.count_documents({})
-    total_getpvt = private_groups_collection.count_documents({})
-    stats_text = f"Total Users: {total_users}\nTotal Private Group Links: {total_getpvt}"
-    await update.message.reply_text(stats_text)
+async def broadcast(update: Update, context: CallbackContext) -> None:
+    """Send a broadcast message to all users."""
+    if update.message.from_user.id != int(OWNER_TELEGRAM_ID):
+        await update.message.reply_text("This command is restricted to the owner only.")
+        return
+
+    if not context.args:
+        await update.message.reply_text("Please provide the message to broadcast. Usage: /broadcast <message>")
+        return
+
+    broadcast_message = " ".join(context.args)
+
+    # Get all users and send them the broadcast message
+    users = users_collection.find()
+    for user in users:
+        try:
+            await context.bot.send_message(user["user_id"], broadcast_message)
+        except Exception as e:
+            logger.error(f"Error sending broadcast to {user['user_id']}: {e}")
+    
+    await update.message.reply_text("Broadcast message sent to all users.")
 
 def main():
     """Start the bot."""
@@ -210,10 +225,10 @@ def main():
     application.add_handler(CommandHandler("getpvt", getpvt))  # Command to get private group links
     application.add_handler(CommandHandler("help", help_command))  # Command for showing help
     application.add_handler(CommandHandler("stats", stats))  # Command to view bot stats
-    application.add_handler(CallbackQueryHandler(show_link))  # Handle link selection in getpvt command
+    application.add_handler(CommandHandler("broadcast", broadcast))  # Command to broadcast a message
     application.add_handler(CallbackQueryHandler(user_commands, pattern="user_commands"))  # User command callback
     application.add_handler(CallbackQueryHandler(admin_commands, pattern="admin_commands"))  # Admin command callback
-    application.add_handler(MessageHandler(Filters.text & ~Filters.command, verify_admin_password))  # Handle password entry
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, verify_admin_password))  # Handle password entry
 
     # Start the Bot
     application.run_polling()
